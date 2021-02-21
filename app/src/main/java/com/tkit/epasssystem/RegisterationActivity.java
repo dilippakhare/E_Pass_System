@@ -1,4 +1,4 @@
-package com.amit.epasssystem;
+package com.tkit.epasssystem;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,15 +14,16 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.amit.epasssystem.Service.AsyncUtilities;
-import com.amit.epasssystem.Service.Common;
-import com.amit.epasssystem.Service.DownloadUtility;
+import com.tkit.epasssystem.Service.AsyncUtilities;
+import com.tkit.epasssystem.Service.Common;
+import com.tkit.epasssystem.Service.DownloadUtility;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,7 +31,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.util.Calendar;
 
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, DownloadUtility
+public class RegisterationActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, DownloadUtility
 {
     Button btnRegister,btnDateBrowse,btnPhotoPathBrowse;
     EditText et_passengerName,et_address,et_emailId,et_contactNo1,et_contactNo2,et_username,et_password,et_rePassword;
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     String bdate;
 
     private int mYear, mMonth, mDay;
+    LinearLayout txtLogin;
 
 
     Spinner spinner;
@@ -56,11 +58,20 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_registration);
         init();
 
-        spinner.setOnItemSelectedListener(this);
+        txtLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent= new Intent(RegisterationActivity.this,LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+        });
 
+
+        spinner.setOnItemSelectedListener(this);
         ArrayAdapter<String> passengerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, passengerType);
         passengerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(passengerAdapter);
@@ -82,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     default:
                         break;
                 }
-                Toast.makeText(MainActivity.this, ""+gender, Toast.LENGTH_SHORT).show();
+                Toast.makeText(RegisterationActivity.this, ""+gender, Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -97,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 mMonth = c.get(Calendar.MONTH);
                 mDay = c.get(Calendar.DAY_OF_MONTH);
 
-                DatePickerDialog datePickerDialog = new DatePickerDialog(MainActivity.this,
+                DatePickerDialog datePickerDialog = new DatePickerDialog(RegisterationActivity.this,
                         new DatePickerDialog.OnDateSetListener()
                         {
                             @Override
@@ -140,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id)
     {
         passengerTypeSelected=passengerType[position];
-        Toast.makeText(getApplicationContext(),passengerType[position] , Toast.LENGTH_LONG).show();
+        //Toast.makeText(getApplicationContext(),passengerType[position] , Toast.LENGTH_LONG).show();
     }
     @Override
     public void onNothingSelected(AdapterView<?> arg0) {
@@ -159,9 +170,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         password=et_password.getText().toString();
         rePassword=et_rePassword.getText().toString();
         bdate=tv_birthdate.getText().toString();
-
-
-
 
 
         if (passengerName.equals("null")||passengerName.equals(null)||passengerName.equals(""))
@@ -228,7 +236,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private void InsertDataToDb() throws JSONException
     {
 
-        String url="http://115.124.127.109/epass/api/values/Registration";
+        String url=Common.url+"/Registration";
 
         long bInMili= Common.GettingMiliSeconds(tv_birthdate.getText().toString());
         long regInmili = System.currentTimeMillis();
@@ -314,8 +322,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
 
+    // For Bing object to view
     private void init()
     {
+        txtLogin=findViewById(R.id.txtLogin);
         //Button
         btnRegister = findViewById(R.id.btnRegister);
         btnDateBrowse = findViewById(R.id.btnDateBrowse);
@@ -352,7 +362,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         if (requestCode==1 && responseCode==200)
         {
             Toast.makeText(this, "Registration successfully", Toast.LENGTH_SHORT).show();
-            Intent intent= new Intent(MainActivity.this,LoginActivity.class);
+            Intent intent= new Intent(RegisterationActivity.this,LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         }
