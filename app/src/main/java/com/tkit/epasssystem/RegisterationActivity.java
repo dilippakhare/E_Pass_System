@@ -204,14 +204,14 @@ public class RegisterationActivity extends AppCompatActivity implements AdapterV
         {
             Toast.makeText(this, "Enter Birthdate ", Toast.LENGTH_SHORT).show();
         }
-        else if (gender.equals("null")||gender.equals(null)||gender.equals(null))
+        else if (gender==null||gender.equals(null)||gender.equals("null"))
         {
             Toast.makeText(this, "Select gender ", Toast.LENGTH_SHORT).show();
         }
-        else if (serverPath.equals("null")||serverPath.equals(null)||serverPath.equals(""))
-        {
-            Toast.makeText(this, "Upload your photo", Toast.LENGTH_SHORT).show();
-        }
+  //      else if (serverPath.equals("null")||serverPath.equals(null)||serverPath.equals(""))
+    //    {
+  //          Toast.makeText(this, "Upload your photo", Toast.LENGTH_SHORT).show();
+  //      }
         else
         {
             if (password.equals(rePassword))
